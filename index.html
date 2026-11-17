@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#201811">
+  <meta name="description" content="V60 Brew Lab — kalkulator resep, pouring schedule, stopwatch, dan jurnal seduhan kopi.">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <title>V60 Brew Lab</title>
+</head>
+<body>
+  <header class="hero">
+    <div><p class="eyebrow">SPECIALTY COFFEE TOOL</p><h1>V60 BREW LAB</h1><p class="subtitle">Brew · Measure · Taste · Improve</p></div>
+    <div class="cup" aria-hidden="true">☕</div>
+  </header>
+
+  <nav class="tabs" aria-label="Navigasi utama">
+    <button class="tab active" data-tab="recipe">⚙️ Resep</button>
+    <button class="tab" data-tab="pour">💧 Pouring</button>
+    <button class="tab" data-tab="journal">📝 Jurnal</button>
+  </nav>
+
+  <main>
+    <section class="page active" id="recipe">
+      <article class="panel">
+        <div class="section-heading"><h2>☕ Coffee Recipe</h2><span class="tag">LIVE CALCULATION</span></div>
+        <div class="form-grid">
+          <label>Dosis kopi (gram)<input id="dose" type="number" min="1" max="100" step="0.5" value="15"></label>
+          <label>Brew ratio (1 : x)<input id="ratio" type="number" min="5" max="30" step="0.5" value="16"></label>
+          <label>Suhu air (°C)<input id="temp" type="number" min="50" max="100" value="90"></label>
+          <label>Grind size<select id="grind"><option>Medium-fine</option><option selected>Medium</option><option>Medium-coarse</option><option>Coarse</option><option>Fine</option></select></label>
+        </div>
+        <div class="total-card"><div><span class="muted">TOTAL AIR</span><small>Dosis × ratio</small></div><strong><span id="total">240</span> <small>ml</small></strong></div>
+      </article>
+
+      <article class="panel">
+        <h2>🎯 Target Bloom</h2>
+        <label class="range-label" for="bloom">Bloom water <strong><span id="bloom-label">40</span>%</strong></label>
+        <input id="bloom" type="range" min="20" max="50" value="40">
+        <div class="mini-grid">
+          <div class="mini-card"><span class="muted">Bloom water</span><strong><span id="bloomml">96</span> ml</strong></div>
+          <div class="mini-card"><span class="muted">Air tersisa</span><strong><span id="remain">144</span> ml</strong></div>
+        </div>
+      </article>
+
+      <article class="panel stopwatch-panel">
+        <h2>⏱️ Brew Stopwatch</h2>
+        <div class="clock-wrap">
+          <span class="muted clock-label">BREW TIME</span>
+          <output id="clock" aria-live="off">00:00.00</output>
+          <span id="clockstatus" class="muted">READY TO BREW</span>
+        </div>
+        <div class="button-grid">
+          <button id="start" class="btn primary">▶ Start</button>
+          <button id="pause" class="btn secondary">Ⅱ Pause</button>
+          <button id="reset" class="btn quiet">↻ Reset</button>
+        </div>
+        <p class="hint">Tekan Start saat mulai menyeduh. Pause menghentikan sementara; Start kembali melanjutkan hitungan.</p>
+      </article>
+    </section>
+
+    <section class="page" id="pour" hidden>
+      <article class="panel">
+        <h2>💧 Pouring Schedule</h2>
+        <p class="muted">Angka adalah target air kumulatif, bukan tambahan air setiap tahap.</p>
+        <div id="schedule" class="schedule"></div>
+        <p class="hint">Tuang perlahan dan merata. Hindari menuang langsung ke dinding kertas filter.</p>
+      </article>
+      <article class="panel">
+        <h2>☝️ Tips Pouring</h2>
+        <ul class="tips">
+          <li>Bloom membantu membasahi bubuk kopi dan melepaskan gas.</li>
+          <li>Tuang melingkar dari tengah ke luar.</li>
+          <li>Jaga aliran air tetap stabil dan konsisten.</li>
+          <li>Gunakan waktu seduh sebagai panduan, bukan aturan mutlak.</li>
+        </ul>
+      </article>
+      <button id="copyrecipe" class="btn primary full">Salin resep & pouring schedule</button>
+      <p id="copymsg" class="message" role="status"></p>
+    </section>
+
+    <section class="page" id="journal" hidden>
+      <article class="panel">
+        <h2>📝 Tasting Journal</h2>
+        <label>Nama beans<input id="beans" placeholder="Contoh: Arabica Wine Mango"></label>
+        <label>Aroma<select id="aroma"><option>Floral</option><option>Fruity</option><option>Chocolate</option><option>Nutty</option><option>Caramel</option><option>Spicy</option><option>Other</option></select></label>
+        <label>Acidity<select id="acidity"><option>Low</option><option selected>Medium</option><option>High</option></select></label>
+        <label>Body<select id="body"><option>Light</option><option selected>Medium</option><option>Heavy</option></select></label>
+        <label>Rasa & catatan<textarea id="notes" rows="3" placeholder="Contoh: terasa manis, fruity, sedikit wine-like..."></textarea></label>
+        <div class="mini-grid">
+          <div class="mini-card"><span class="muted">Brew time</span><strong id="journal-time">00:00.00</strong></div>
+          <div class="mini-card"><span class="muted">Total water</span><strong><span id="journal-water">240</span> ml</strong></div>
+        </div>
+        <div class="button-grid journal-buttons">
+          <button id="savejournal" class="btn primary">Simpan jurnal</button>
+          <button id="copyjournal" class="btn secondary">Salin jurnal</button>
+        </div>
+        <p id="journalmsg" class="message" role="status"></p>
+      </article>
+      <article class="panel">
+        <div class="section-heading"><h2>📚 Riwayat seduhan</h2><button id="clearhistory" class="text-button">Hapus semua</button></div>
+        <div id="history" class="history"><p class="muted">Belum ada jurnal tersimpan.</p></div>
+      </article>
+    </section>
+  </main>
+  <footer>Brew with curiosity. Improve with every cup. ☕</footer>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
